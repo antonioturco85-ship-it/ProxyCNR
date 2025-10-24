@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ProxyCNR Converter</title>
+</head>
+<body>
+<h2>Proxy CNR Converter (Android)</h2>
+<input id="urli" type="text" size="70" placeholder="Incolla qui l’URL dell’articolo">
+<button onclick="proxy()">Genera link proxy</button>
+<p id="out"></p>
+<script>
+function proxy(){
+  const url = document.getElementById('urli').value;
+  const mappings = [
+    {regex: /sciencedirect\.com\/science\/article\/(abs\/)?pii\/[A-Za-z0-9]+/, split: 'sciencedirect.com', proxy: 'https://biblioproxy.cnr.it:2114'},
+    {regex: /pubs\.acs\.org\/doi/, split: 'pubs.acs.org', proxy: 'https://biblioproxy.cnr.it:2150'},
+    {regex: /onlinelibrary\.wiley\.com\/doi/, split: 'onlinelibrary.wiley.com', proxy: 'https://biblioproxy.cnr.it:2270'},
+    {regex: /link\.springer\.com\/article/, split: 'link.springer.com', proxy: 'https://biblioproxy.cnr.it:2280'},
+    {regex: /pubs\.rsc\.org/, split: 'pubs.rsc.org', proxy: 'https://biblioproxy.cnr.it:3325'},
+    {regex: /pubs\.aip\.org/, split: 'pubs.aip.org', proxy: 'https://biblioproxy.cnr.it:2396'},
+    {regex: /iopscience\.iop\.org\/article/, split: 'iopscience.iop.org', proxy: 'https://biblioproxy.cnr.it:2884'},
+    {regex: /nature\.com/, split: 'nature.com', proxy: 'https://biblioproxy.cnr.it:2435'}
+  ];
+  for (let m of mappings) {
+    if (m.regex.test(url)) {
+      const path = url.split(m.split)[1];
+      const link = m.proxy + path;
+      document.getElementById('out').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+      return;
+    }
+  }
+  document.getElementById('out').innerText = "Sito non riconosciuto.";
+}
+</script>
+</body>
+</html>
