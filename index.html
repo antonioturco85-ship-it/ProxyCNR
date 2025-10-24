@@ -1,37 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ProxyCNR Converter</title>
-</head>
-<body>
-<h2>Proxy CNR Converter (Android)</h2>
-<input id="urli" type="text" size="70" placeholder="Incolla qui l’URL dell’articolo">
-<button onclick="proxy()">Genera link proxy</button>
-<p id="out"></p>
-<script>
-function proxy(){
-  const url = document.getElementById('urli').value;
-  const mappings = [
-    {regex: /sciencedirect\.com\/science\/article\/(abs\/)?pii\/[A-Za-z0-9]+/, split: 'sciencedirect.com', proxy: 'https://biblioproxy.cnr.it:2114'},
-    {regex: /pubs\.acs\.org\/doi/, split: 'pubs.acs.org', proxy: 'https://biblioproxy.cnr.it:2150'},
-    {regex: /onlinelibrary\.wiley\.com\/doi/, split: 'onlinelibrary.wiley.com', proxy: 'https://biblioproxy.cnr.it:2270'},
-    {regex: /link\.springer\.com\/article/, split: 'link.springer.com', proxy: 'https://biblioproxy.cnr.it:2280'},
-    {regex: /pubs\.rsc\.org/, split: 'pubs.rsc.org', proxy: 'https://biblioproxy.cnr.it:3325'},
-    {regex: /pubs\.aip\.org/, split: 'pubs.aip.org', proxy: 'https://biblioproxy.cnr.it:2396'},
-    {regex: /iopscience\.iop\.org\/article/, split: 'iopscience.iop.org', proxy: 'https://biblioproxy.cnr.it:2884'},
-    {regex: /nature\.com/, split: 'nature.com', proxy: 'https://biblioproxy.cnr.it:2435'}
-  ];
-  for (let m of mappings) {
-    if (m.regex.test(url)) {
-      const path = url.split(m.split)[1];
-      const link = m.proxy + path;
-      document.getElementById('out').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
-      return;
+<style>
+  /* Stile generale */
+  body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  h2 {
+    color: #0056b3;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  /* Barra input */
+  input[type="text"] {
+    width: 70%;
+    max-width: 600px;
+    padding: 14px 18px;
+    font-size: 1.1rem;
+    border: 2px solid #0078d7;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 6px rgba(0, 86, 179, 0.3);
+  }
+
+  /* Bottone */
+  button {
+    margin-top: 15px;
+    padding: 14px 30px;
+    font-size: 1.1rem;
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Output link */
+  #out {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+
+  a {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Mobile ottimizzazione */
+  @media (max-width: 480px) {
+    input[type="text"], button {
+      width: 90%;
+      font-size: 1rem;
     }
   }
-  document.getElementById('out').innerText = "Sito non riconosciuto.";
-}
-</script>
+</style>
+</head>
+<body>
+  <h2>Proxy CNR Converter (Android)</h2>
+  <input id="urli" type="text" placeholder="Incolla qui l’URL dell’articolo">
+  <button onclick="proxy()">Genera link proxy</button>
+  <p id="out"></p>
+
+  <script>
+    function proxy(){
+      const url = document.getElementById('urli').value.trim();
+      const mappings = [
+        {regex: /sciencedirect\.com\/science\/article\/(abs\/)?pii\/[A-Za-z0-9]+/, split: 'sciencedirect.com', proxy: 'https://biblioproxy.cnr.it:2114'},
+        {regex: /pubs\.acs\.org\/doi/, split: 'pubs.acs.org', proxy: 'https://biblioproxy.cnr.it:2150'},
+        {regex: /onlinelibrary\.wiley\.com\/doi/, split: 'onlinelibrary.wiley.com', proxy: 'https://biblioproxy.cnr.it:2270'},
+        {regex: /link\.springer\.com\/article/, split: 'link.springer.com', proxy: 'https://biblioproxy.cnr.it:2280'},
+        {regex: /pubs\.rsc\.org/, split: 'pubs.rsc.org', proxy: 'https://biblioproxy.cnr.it:3325'},
+        {regex: /pubs\.aip\.org/, split: 'pubs.aip.org', proxy: 'https://biblioproxy.cnr.it:2396'},
+        {regex: /iopscience\.iop\.org\/article/, split: 'iopscience.iop.org', proxy: 'https://biblioproxy.cnr.it:2884'},
+        {regex: /nature\.com/, split: 'nature.com', proxy: 'https://biblioproxy.cnr.it:2435'}
+      ];
+
+      for (let m of mappings) {
+        if (m.regex.test(url)) {
+          const path = url.split(m.split)[1];
+          const link = m.proxy + path;
+          document.getElementById('out').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+          return;
+        }
+      }
+
+      document.getElementById('out').innerText = "❌ Sito non riconosciuto.";
+    }
+  </script>
 </body>
 </html>
